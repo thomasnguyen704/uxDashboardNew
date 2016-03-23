@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      * { border-radius: 0 !important; }
+      body { padding-bottom: 10%; margin-top: -44px; font-family: 'Open Sans', sans-serif;}
+      .card {padding: 15px;}
+      .small-chart { height: 200px; }
+      .med-chart { height: 373px; }
+      .medium-height{ height:400px; }
+      .bg-dark { background: rgba(0, 0, 0, 0.85)!important;}
+      .remove-border {border:none!important;}
+      .jumbo-vid{
+        padding:0px;
+        margin:0px;
+      }
+      .jumbo-vid-change { position: fixed; z-index: 999999; right:20px; margin-top: 5px;}
+      @media (min-width: 992px) {
+        .container{
+          padding-right:320px;
+        }
+      }
+      .blank-space{
+        height:95px;
+      }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="handlebars.runtime-v4.0.5.js"></script>
+    <script src="templates.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+
+    <script>
+      $(window).scroll(function() {
+          var scroll = $(window).scrollTop();
+          var objectSelect = $("#change-me");
+          var objectPosition = objectSelect.offset().top;
+          var jumbVid=$(".jumbo-vid");
+          if (scroll > objectPosition) {
+              jumbVid.removeClass("col-lg-12");
+              jumbVid.addClass("col-lg-3 jumbo-vid-change");
+          } else {
+              jumbVid.removeClass("col-lg-3 jumbo-vid-change");
+              jumbVid.addClass("col-lg-12");
+          }
+      });
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-fixed-top bg-inverse bg-dark">
+        <div class="container">
+            <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">&#9776;</button>
+            <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item"><a class="nav-link text-danger" href="#mrm">Market Risk Model</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class='blank-space'>
+    </div>
+
+    <div class="card card-inverse remove-border col-lg-12 jumbo-vid">
+      <div class="embed-responsive embed-responsive-16by9 card-img">
+          <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/dK3A0WaJ3gE?rel=0&amp;autoplay=1" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div id="change-me"></div>
+    <a name="mrm"></a>
+    <div class='blank-space'>
+    </div>
+    <div class="container">
+        <h2>Market Risk Model</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <p>This is a prototype for a model which computes the daily or 10 day VaR for compliance with the Market Risk Rule. This model computes the prices of interest rate derivative securities given n realizations of the underlying interest rate. The model is based off risk-neutral interest rates following a Hull-White model which can fit the initial yield curve exactly. The real-world interest rate dynamics are assumed to follow a Vasicek (time-homogeneous Hull-White) process for simulation purposes. This framework is chosen for two reasons: it is efficient in pricing a wide range of interest rate options and it provides a suitable first approximation to the risk that may be incurred from movements in interest rates. Models that provide a better fit to market data (eg, the LIBOR Market Model) are not as flexible in pricing a variety of options. Models that generalize to multi-dimensional processes (eg, multi-dimensional Hull-White) are more difficult to estimate and are often less efficient for pricing purposes.</p>
+            </div>
+        </div>
+
+        <div id='mainModel'></div>
+
+        <br><br>
+        <a name="about"></a>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Audacious Thoughts on Model Development</h2>
+                <p> Model development should follow similar process to application development. Application development separates the GUI, the programming logic, and the database. Models are typically going to be embedded in the programming logic section. In modern web applications the GUI is handled almost exclusively on the client side while the server is responsible for application logic and database communication. For example, this site has all routes, links, and visual content on the client. The server is responsible for numerical implementations of the models.</p>
+                <p>GUI development for models should allow all important model features to be easily altered. Data should never be a thought for the end user and should be automatically loaded. As an example, CCAR uses a variety of scenarios over a fixed time frame defined by the Federal Reserve. However, the board of directors may want to consider different scenarios of a different time frame. During the board meeting they should be allowed to manipulate the model using any scenario they can imagine and see the results on the bank's income and balance sheet.</p>
+                <p>GUI development for models should also consider transparency. What parts of the model are the most critical? What is the biggest assumption or trade-off used in developing the model? These parts should be able to be monitored through the GUI.</p>
+                <p>Data should always flow into the model automatically. This can done through web-sockets or REST hooks. This is often used with external data like FRED . Data can also flow through by calling data directly from a database. The database should be created in such a way that data types are guaranteed. For example, primary and foreign keys should be enforced, data should be labeled "not null" where appropriate. During development the data environment should be investigated so that no surprises show up after the model has been placed in production.</p>
+            </div>
+
+            <div class="col-xs-6 small">
+                <div class="col-xs-6">
+                    <img src="https://media.licdn.com/media/AAEAAQAAAAAAAAcLAAAAJDhjYTJiNTA2LThkODItNDVmMC1hMjUxLTcxNWM1NzhkNDQyZQ.jpg" alt="thomas-nguyen" class="img-fluid img-thumbnail">
+                    <br>
+                    <a href="https://www.linkedin.com/pub/thomas-nguyen/54/aa4/823"><img src="https://static.licdn.com/scds/common/u/img/webpromo/btn_in_20x15.png" width="20" height="15" alt="View Thomas Nguyen's LinkedIn profile" style="vertical-align:middle;" border="0">Thomas Nguyen</a>
+                </div>
+                <div class="col-xs-6">
+                    <img src="https://media.licdn.com/media/AAEAAQAAAAAAAAZAAAAAJGY1NmFkOTUzLWRlYzItNDE4Yy04YWVkLTZjMTk4Yjk2ODE2YQ.jpg" alt="daniel-stahl" class="img-fluid img-thumbnail">
+                    <br>
+                    <a href="https://www.linkedin.com/in/daniel-stahl-6685a52a"><img src="https://static.licdn.com/scds/common/u/img/webpromo/btn_in_20x15.png" width="20" height="15" alt="View Daniel Stahl's LinkedIn profile" style="vertical-align:middle;" border="0">Daniel Stahl</a>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.container -->
+
+  </body>
+  <script src='handleHighcharts.js'></script>
+  <script src='handleTemplates.js'></script>
+  <script src='dashboard.js'></script>
+</html>
+
+
+<!--{{> getFred}}
+<template name="getFred">
+    {{showValues}}
+</template>-->

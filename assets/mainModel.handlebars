@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-md-4">
+      <div class="card form-card">
+          <div class="pre-scrollable">
+              {{> marketInputs}}
+          </div>
+      </div><!-- /.card -->
+      <!-- <a class="small" href="#">Help</a><br><br>a modal -->
+  </div>
+  <div class="col-md-8 text-xs-center">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="card">
+                <div id='progress'>
+                  {{> progressbar}}
+                </div>
+                <div id="chart">
+                </div>
+                <div id="hist">
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class='row'>
+  <div class="col-md-4">
+      <div class="card form-card" id='showValues'>
+          {{> showValues}}
+      </div><!-- /.card -->
+  </div>
+  <div class="col-md-8 text-xs-center">
+    <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div id='riskContributions'>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
